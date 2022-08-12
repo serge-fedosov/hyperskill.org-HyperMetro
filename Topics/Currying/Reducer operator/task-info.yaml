@@ -1,0 +1,27 @@
+type: code
+files:
+- name: src/Main.java
+  visible: true
+  text: "import java.util.Scanner;\nimport java.util.function.*;\nimport java.util.stream.*;\n\
+    \nclass CustomReducer {\n\n    /**\n     * The operator combines all values in\
+    \ the given range into one value\n     * using combiner and initial value (seed)\n\
+    \     */\n    final BiFunction<Integer, IntBinaryOperator, IntBinaryOperator>\
+    \ reduceIntOperator = \n            // write your code here\n\n    /**\n     *\
+    \ The operator calculates the sum in the given range (inclusively)\n     */\n\
+    \    final IntBinaryOperator sumOperator = reduceIntOperator.apply(0, (x, y) ->\
+    \ x + y);\n\n    /**\n     * The operator calculates the product in the given\
+    \ range (inclusively)\n     */\n    final IntBinaryOperator productOperator =\
+    \ // write your code here\n\n    // Don't change the code below\n    public static\
+    \ void main(String[] args) {\n\n        Scanner scanner = new Scanner(System.in);\n\
+    \        String[] values = scanner.nextLine().split(\" \");\n\n        int l =\
+    \ Integer.parseInt(values[0]);\n        int r = Integer.parseInt(values[1]);\n\
+    \n        CustomReducer reducer = new CustomReducer();\n\n        int sumReducer\
+    \ = reducer.reduceIntOperator.apply(0, Integer::sum).applyAsInt(l, r);\n     \
+    \   int sum = reducer.sumOperator.applyAsInt(l, r);\n\n        int prodReducer\
+    \ = reducer.reduceIntOperator.apply(1, (x, y) -> x * y).applyAsInt(l, r);\n  \
+    \      int prod = reducer.productOperator.applyAsInt(l, r);\n\n        System.out.printf(\"\
+    %d %d %d %d\", sumReducer, sum, prodReducer, prod);\n    }\n}"
+  learner_created: false
+feedback_link: https://hyperskill.org/learn/step/2435#comment
+status: Unchecked
+record: -1
