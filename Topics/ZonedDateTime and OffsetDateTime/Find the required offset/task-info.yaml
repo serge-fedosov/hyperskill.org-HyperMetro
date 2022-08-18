@@ -1,0 +1,17 @@
+type: code
+files:
+- name: src/Main.java
+  visible: true
+  text: "import java.util.Scanner;\nimport java.time.*;\n\npublic class Main {\n \
+    \   public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n\
+    \        LocalDateTime  localDateTime = LocalDateTime.of(1991, 4, 15, 15, 0);\n\
+    \        ZoneId zoneId = ZoneId.of(scanner.nextLine());\n\n        printZoneRules(zoneId,\
+    \ localDateTime);\n    } \n\n    public static void printZoneRules(ZoneId zoneId,\
+    \ LocalDateTime  localDateTime) {\n\n    }\n}"
+  learner_created: false
+feedback_link: https://hyperskill.org/learn/step/21649#comment
+status: Solved
+feedback:
+  message: <html>Correct solution</html>
+  time: Thu, 18 Aug 2022 10:39:20 UTC
+record: -1

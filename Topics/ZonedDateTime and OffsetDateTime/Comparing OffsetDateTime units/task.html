@@ -1,0 +1,22 @@
+<h2>Comparing OffsetDateTime units</h2>
+<html>
+ <head></head>
+ <body>
+  r/&gt; What is the output of the code below?
+  <p></p> 
+  <pre><code class="language-java">LocalDate localDate1 = LocalDate.of(2011, 7, 11);
+LocalTime localTime1 = LocalTime.of(18,30);
+
+LocalDate localDate2 = LocalDate.of(1995, 5, 21);
+LocalTime localTime2 = LocalTime.of(18,30);
+
+LocalDateTime localDateTime1 = LocalDateTime.of(localDate1, localTime1);
+LocalDateTime localDateTime2 = LocalDateTime.of(localDate2, localTime2);
+
+ZoneOffset zoneOffset = ZoneOffset.of("+04:00");
+OffsetDateTime offsetDateTime1 = OffsetDateTime.of(localDateTime1, zoneOffset);
+OffsetDateTime offsetDateTime2 = OffsetDateTime.of(localDateTime2, zoneOffset);
+
+System.out.println(offsetDateTime2.compareTo(offsetDateTime1));</code></pre>
+ </body>
+</html>

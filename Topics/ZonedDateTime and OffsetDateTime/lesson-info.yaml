@@ -1,0 +1,14 @@
+content:
+- Theory
+- The withZoneSameLocal() method
+- Time zone rules
+- Comparing OffsetDateTime units
+- A region or a fixed offset class
+- The withZoneSameInstant() method
+- The fixed offset of the time zone
+- Get the Instant of the ZonedDateTime
+- Get the OffsetDateTime unit
+- The until() method
+- Find the required offset
+- Comparing ZonedDateTime units
+- Comparing instant values

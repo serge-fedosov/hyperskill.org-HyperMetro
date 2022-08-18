@@ -1,0 +1,26 @@
+type: code
+files:
+- name: src/Main.java
+  visible: true
+  text: "import java.util.Scanner;\nimport java.time.*;\nimport java.time.temporal.ChronoUnit;\n\
+    \npublic class Main {\n    public static void main(String[] args) {\n        Scanner\
+    \ scanner = new Scanner(System.in);\n\n        ZoneId yerevanZone = ZoneId.of(\"\
+    Asia/Yerevan\");\n        ZoneOffset yerevanOffset = ZoneOffset.of(\"+04:00\"\
+    );\n\n        LocalDateTime localDateTime1 = LocalDateTime.of(1991, 4, 15, 13,\
+    \ 0);\n        LocalDateTime localDateTime2 = createLocalDateTime(scanner);\n\
+    \        ZonedDateTime zonedDateTime = ZonedDateTime.of(localDateTime1, yerevanZone);\n\
+    \        OffsetDateTime offsetDateTime = OffsetDateTime.of(localDateTime2, yerevanOffset);\n\
+    \n        System.out.println(getHoursUntil(zonedDateTime, offsetDateTime));\n\
+    \    } \n\n    public static LocalDateTime createLocalDateTime(Scanner scanner)\
+    \ {\n        int year = scanner.nextInt();\n        int month = scanner.nextInt();\n\
+    \        int dayOfMonth = scanner.nextInt();\n        int hour = scanner.nextInt();\n\
+    \        int minute = scanner.nextInt();\n\n        return LocalDateTime.of(year,\
+    \ month, dayOfMonth, hour, minute);\n    }\n\n    public static long getHoursUntil(ZonedDateTime\
+    \ zonedDateTime, OffsetDateTime offsetDateTime) {\n\n    }\n}"
+  learner_created: false
+feedback_link: https://hyperskill.org/learn/step/21657#comment
+status: Solved
+feedback:
+  message: <html>Correct solution</html>
+  time: Thu, 18 Aug 2022 11:21:15 UTC
+record: -1

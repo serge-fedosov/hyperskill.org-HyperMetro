@@ -1,48 +1,28 @@
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-
-import java.io.IOException;
-import java.io.Reader;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.util.Comparator;
+import java.util.Map;
+import java.util.Scanner;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Main {
     public static void main(String[] args) {
-        String fileName = "C:\\java\\hyperskill.org\\HyperMetro\\example-file.txt";
-        Path path = Paths.get(fileName);
+        final Comparator<Map.Entry<String, Long>> valueComparator =
+                Map.Entry.comparingByValue(Comparator.reverseOrder());
+        final Comparator<Map.Entry<String, Long>> keyComparator =
+                Map.Entry.comparingByKey();
 
-        try (Reader reader = Files.newBufferedReader(path,
-                StandardCharsets.UTF_8)) {
+        Scanner scanner = new Scanner(System.in);
 
-            JsonParser parser = new JsonParser();
-            JsonElement tree = parser.parse(reader);
-
-            JsonArray array = tree.getAsJsonArray();
-
-            for (JsonElement element : array) {
-
-                if (element.isJsonObject()) {
-
-                    JsonObject car = element.getAsJsonObject();
-
-                    System.out.println("********************");
-                    System.out.println(car.get("name").getAsString());
-                    System.out.println(car.get("model").getAsString());
-                    System.out.println(car.get("price").getAsInt());
-
-                    JsonArray cols = car.getAsJsonArray("colors");
-
-                    cols.forEach(col -> {
-                        System.out.println(col);
-                    });
-                }
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        Stream.of(scanner.nextLine().replaceAll("\\W", " ")
+                        .replaceAll("\\s+", " ")
+                        .toLowerCase()
+                        .split(" "))
+                .collect(Collectors.groupingBy(x -> x, Collectors.counting()))
+                .entrySet()
+                .stream()
+                .sorted(valueComparator.thenComparing(keyComparator))
+                .limit(10)
+                .map(Map.Entry::getKey)
+                .forEach(System.out::println);
     }
 }

@@ -1,0 +1,143 @@
+<h2>ZonedDateTime and OffsetDateTime</h2>
+<html>
+ <head></head>
+ <body>
+  <p>You probably already know that time in the world is divided into time zones. In programming, there are often situations where you need to work with a specific time zone. Basic <code class="language-java">LocalTime</code> and <code class="language-java">LocalDateTime</code> classes don't handle time zones. For this purpose, Java implements special classes that allow us to work with time taking into account different time zones. Those are <code class="language-java">ZonedDateTime</code> and <code class="language-java">OffsetDateTime</code> <strong>date-time</strong> classes. In this topic, you will get acquainted with these classes, and learn about their purpose and how to operate with them. They are quite similar to the <code class="language-java">Instant</code> class, so if you're familiar with this class, it will be easier to navigate this topic.</p> 
+  <h5 id="classes-describing-time-zones">Classes describing time zones</h5> 
+  <p>Before exploring the classes mentioned above, let's first study the other three that allow them to work with time zones. Those classes are <code class="language-java">ZoneId</code><strong>, </strong><code class="language-java">ZoneRules</code>, and <code class="language-java">ZoneOffset</code><strong>.</strong> </p> 
+  <ul> 
+   <li><code class="language-java">ZoneId</code> is a class describing a time zone as a <strong>fixed offset, </strong>for instance, <code class="language-java">+04:00</code>, <code class="language-java">GMT+4</code> or <code class="language-java">UTC+04:00</code>, or a region, such as <code class="language-java">Asia/Yerevan</code> or <code class="language-java">Europe/London</code>, etc. This class is related to the <code class="language-java">ZoneRules</code> class that which defines when and how the offset changes. The <code class="language-java">ZoneId</code> class doesn't just show the current rules of the time zone but also past rules. For instance, as of 2022,<strong> </strong>Armenia doesn't use daylight saving time but in 1999 it used to:</li> 
+  </ul> 
+  <pre><code class="language-java">LocalDateTime pastSummerTime = LocalDateTime.of(1999, 9, 15, 13, 00);
+LocalDateTime pastWinterTime = LocalDateTime.of(1999, 1, 15, 13, 00);
+
+LocalDateTime summerTime2022 = LocalDateTime.of(2022, 9, 15, 13, 00);
+LocalDateTime winterTime2022 = LocalDateTime.of(2022, 1, 15, 13, 00);
+
+System.out.println(pastSummerTime.atZone(ZoneId.of("Asia/Yerevan"))); // 1999-09-15T13:00+05:00[Asia/Yerevan]
+System.out.println(summerTime2022.atZone(ZoneId.of("Asia/Yerevan"))); // 2022-09-15T13:00+04:00[Asia/Yerevan]
+
+System.out.println(pastWinterTime.atZone(ZoneId.of("Asia/Yerevan"))); // 1999-01-15T13:00+04:00[Asia/Yerevan]
+System.out.println(winterTime2022.atZone(ZoneId.of("Asia/Yerevan"))); // 2022-01-15T13:00+04:00[Asia/Yerevan]</code></pre> 
+  <p>As you can see, there is a difference in the time zone in the two years. Now let's understand how the <code class="language-java">ZoneId</code> class gets the information about time zones:</p> 
+  <pre><code class="language-java">LocalDateTime  past = LocalDateTime.of(1999, 9, 15, 13, 00);
+LocalDateTime  by2022 = LocalDateTime.of(2022, 9, 15, 13, 00);
+ZoneRules  rules = ZoneId.of("Asia/Yerevan").getRules();
+
+System.out.println(ZoneId.of("Asia/Yerevan").getRules()); // ZoneRules[currentStandardOffset=+04:00]
+System.out.println("Fixed Offset: "  + rules.isFixedOffset()); // Fixed Offset: false
+System.out.println("Past summer offset: "  + rules.getOffset(past)); // Past summer offset: +05:00
+System.out.println("Current summer offset: "  + rules.getOffset(by2022)); // Current summer offset: +04:00</code></pre> 
+  <p>The example above clearly shows the purpose of the <code class="language-java">ZoneRules</code> class. Inside the <code class="language-java">ZoneId</code> class, there is a <code class="language-java">getRules()</code> method returning a <code class="language-java">ZoneRules</code> object, which gives us access to other <code class="language-java">ZoneRules</code> methods.</p> 
+  <ul> 
+   <li><code class="language-java">ZoneOffset</code><strong> </strong>represents the fixed offset of the time zone. Its value can vary depending on the time of year if the specified region uses the daylight saving time approach.</li> 
+  </ul> 
+  <pre><code class="language-java">ZoneOffset zoneOffset = ZoneOffset.of("+04:00");
+ZoneOffset zoneOffsetHours = ZoneOffset.ofHours(4);
+ZoneOffset zoneOffsetHoursMinutes = ZoneOffset.ofHoursMinutes(4, 30);</code></pre> 
+  <p>It extends <code class="language-java">ZoneId</code> and describes the amount of time the given time zone differs from Greenwich time. If one region can have several offsets, one offset can represent several regions (countries, cities). <br> Note that there are regions where the offset contains not only hours but also minutes:</p> 
+  <pre><code class="language-java">System.out.println(ZoneId.of("Iran").getRules()); // Iran ZoneRules[currentStandardOffset=+03:30]
+System.out.println(ZoneId.of("Asia/Kolkata").getRules()); // ZoneRules[currentStandardOffset=+05:30]</code></pre> 
+  <h5 id="creating-required-objects">Creating required objects</h5> 
+  <p>Now that you got acquainted with the classes providing operations with time zones, let's find out how to use them to create <code class="language-java">ZonedDateTime</code> and <code class="language-java">OffsetDateTime</code> units. You will explore three methods: <code class="language-java">of()</code>, <code class="language-java">from()</code> and <code class="language-java">parse()</code>. You are probably already familiar with them. These are common methods of the <code class="language-java">java.time</code> package. The first method has many variations in the number and type of accepted parameters. We will consider some of them and you can easily explore others yourself.</p> 
+  <pre><code class="language-java">LocalDate localDate = LocalDate.of(1991, 4, 15);
+LocalTime localTime = LocalTime.of(18,30);
+        
+LocalDateTime localDateTime = LocalDateTime.of(localDate, localTime);
+ZoneId zoneId = ZoneId.of("Asia/Yerevan");
+ZoneOffset zoneOffset = ZoneOffset.of("+04:00");
+
+System.out.println(ZonedDateTime.of(localDate, localTime, zoneId)); // 1991-04-15T18:30+04:00[Asia/Yerevan]
+System.out.println(ZonedDateTime.ofInstant(Instant.EPOCH, zoneId)); // 1970-01-01T04:00+04:00[Asia/Yerevan]
+
+System.out.println(OffsetDateTime.of(localDateTime, zoneOffset)); // 1991-04-15T18:30+04:00
+System.out.println(OffsetDateTime.ofInstant(Instant.EPOCH, zoneId)); // 1970-01-01T04:00+04:00</code></pre> 
+  <p>As you can see, you can obtain the required units from an <code class="language-java">Instant</code> object. A similar approach is implemented in the <code class="language-java">Instant</code> class. It's possible to create its units by passing <code class="language-java">ZonedDateTime</code> or <code class="language-java">OffsetDateTime</code> objects to the <code class="language-java">Instant.from()</code> method and obtain <code class="language-java">Instant</code> units.<br> With the <code class="language-java">from()</code> method, you can create objects of one class by passing as an argument another class object:</p> 
+  <pre><code class="language-java">ZonedDateTime zonedDateTime1 = ZonedDateTime.from(OffsetDateTime.now());
+ZonedDateTime zonedDateTime2 = ZonedDateTime.from(Instant.now());
+
+OffsetDateTime offsetDateTime1 = OffsetDateTime.from(ZonedDateTime.now());
+OffsetDateTime offsetDateTime2 = OffsetDateTime.from(LocalTime.now());</code></pre> 
+  <p>The <code class="language-java">parse()</code> method behaves like the same method from the <code class="language-java">Period</code>, <code class="language-java">Duration</code>, or <code class="language-java">Instant</code> classes. It accepts text and parses it to the appropriate class instance.</p> 
+  <pre><code class="language-java">ZonedDateTime.parse("1991-04-15T18:30+04:00[Asia/Yerevan]");
+OffsetDateTime.parse("1970-01-01T04:00+04:00");</code></pre> 
+  <h5 id="performing-operations">Performing operations</h5> 
+  <p>In this section, you will look at examples with various operational methods. You will understand how to use methods you know from the <code class="language-java">Instant</code> class, as well as some other new methods. <br> Let's start by exploring how to compare units of these classes. The first approach is described below: </p> 
+  <pre><code class="language-java">LocalDate localDate = LocalDate.of(1991, 4, 15);
+LocalTime localTime = LocalTime.of(18,30);
+        
+LocalDateTime localDateTime = LocalDateTime.of(localDate, localTime);
+ZoneId zoneId = ZoneId.of("Asia/Yerevan");
+ZoneOffset zoneOffset = ZoneOffset.from(LocalDateTime.now().atZone(zoneId));
+
+// unit1.toInstant().isBefore(unit2.toInstant())
+ZonedDateTime.of(localDateTime, zoneId).isBefore(ZonedDateTime.of(LocalDateTime.now(), zoneId));
+// unit1.toInstant().isAfter(unit2.toInstant())
+ZonedDateTime.of(localDateTime, zoneId).isAfter(ZonedDateTime.of(LocalDateTime.now(), zoneId));
+
+// unit1.toInstant().isBefore(unit2.toInstant())
+OffsetDateTime.of(localDateTime, zoneOffset).isBefore(OffsetDateTime.of(LocalDateTime.now(), zoneOffset));
+// unit1.toInstant().isAfter(unit2.toInstant())
+OffsetDateTime.of(localDateTime, zoneOffset).isAfter(OffsetDateTime.of(LocalDateTime.now(), zoneOffset));</code></pre> 
+  <p>In the comments to the example above, you can see how the <code class="language-java">isBefore()</code> and <code class="language-java">isAfter()</code> methods actually compare objects. The other comparison method is the <code class="language-java">Comparable#compareTo()</code> implementation which is probably familiar to you. For the <code class="language-java">ZonedDateTime</code> units it operates as expected, returning <code class="language-java">-1</code>, <code class="language-java">0</code> or <code class="language-java">1</code>, but, when operating with <code class="language-java">OffsetDateTime</code> units, it returns the difference in years:</p> 
+  <pre><code class="language-java">LocalDate localDate1 = LocalDate.of(1991, 4, 15);
+LocalTime localTime1 = LocalTime.of(18,30);
+
+LocalDate localDate2 = LocalDate.of(1995, 5, 21);
+LocalTime localTime2 = LocalTime.of(18,30);
+
+LocalDateTime localDateTime1 = LocalDateTime.of(localDate1, localTime1);
+LocalDateTime localDateTime2 = LocalDateTime.of(localDate2, localTime2);
+
+ZoneOffset zoneOffset = ZoneOffset.of("+04:00");
+
+OffsetDateTime offsetDateTime1 = OffsetDateTime.of(localDateTime1, zoneOffset);
+OffsetDateTime offsetDateTime2 = OffsetDateTime.of(localDateTime2, zoneOffset);
+
+System.out.println(offsetDateTime1.compareTo(offsetDateTime2)); // -4
+System.out.println(offsetDateTime2.compareTo(offsetDateTime1)); // 4</code></pre> 
+  <p>The next pair is also worth looking at. Both perform the equality comparison but in different ways:</p> 
+  <pre><code class="language-java">LocalDate localDate = LocalDate.of(1991, 4, 15);
+LocalTime localTime = LocalTime.of(18,30);
+LocalDateTime localDateTime = LocalDateTime.of(localDate, localTime);
+
+ZoneId zoneId = ZoneId.of("Asia/Yerevan");
+ZoneOffset zoneOffset = ZoneOffset.from(LocalDateTime.now().atZone(zoneId));
+
+ZonedDateTime zonedDateTime1 = ZonedDateTime.of(localDateTime, zoneOffset);
+ZonedDateTime zonedDateTime2 = ZonedDateTime.of(localDateTime, zoneId);
+
+System.out.println(zonedDateTime1.equals(zonedDateTime2)); // false
+// unit1.toInstant().equals(unit2.toInstant())
+System.out.println(zonedDateTime1.isEqual(zonedDateTime2)); // true
+
+OffsetDateTime offsetDateTime1 = OffsetDateTime.ofInstant(Instant.ofEpochSecond(0), ZoneOffset.of("+03:00"));
+OffsetDateTime offsetDateTime2 = OffsetDateTime.ofInstant(Instant.EPOCH, zoneId);
+
+System.out.println(offsetDateTime1.equals(offsetDateTime2)); // false
+// unit1.toInstant().equals(unit2.toInstant())
+System.out.println(offsetDateTime1.isEqual(offsetDateTime2)); // true</code></pre> 
+  <p>When comparing by the <code class="language-java">isEqual()</code> method, you compare moments on the timeline where the time zone doesn't matter. As for comparing by <code class="language-java">equal()</code>, it requires comparison by all the field values of the object, and you get a <code class="language-java">false</code> result.<br> These two classes, like others from the same package, provide different variations of the <code class="language-java">get()</code> method, such as <code class="language-java">getMonth()</code>, <code class="language-java">getHour()</code>, <code class="language-java">getSecond()</code>, <code class="language-java">getZone()</code>, <code class="language-java">getOffset()</code>, and so on. You should already be familiar with them, so let's skip the code samples for those methods. The same can be said about the <code class="language-java">minus()</code>, <code class="language-java">plus()</code> and <code class="language-java">until()</code> methods.<br> In practice, you will face situations when you will need to get a date-time unit from another unit by changing the time zone. </p> 
+  <pre><code class="language-java">ZoneId zone0 = ZoneId.of("GMT+0");
+ZoneId londonZone = ZoneId.of("Europe/London");
+ZoneId yerevanZone = ZoneId.of("Asia/Yerevan");
+ZoneOffset offset0 = ZoneOffset.of("+00:00");
+ZoneOffset londonOffset = ZoneOffset.of("+01:00");
+ZoneOffset yerevanOffset = ZoneOffset.of("+04:00");
+        
+LocalDateTime localDateTime = LocalDateTime.of(1991, 4, 15, 13, 00);
+ZonedDateTime zonedDateTime = ZonedDateTime.of(localDateTime, yerevanZone);
+OffsetDateTime offsetDateTime = OffsetDateTime.of(localDateTime, yerevanOffset);
+
+System.out.println(zonedDateTime.withZoneSameInstant(zone0)); // 1991-04-15T09:00Z[GMT]
+System.out.println(zonedDateTime.withZoneSameInstant(londonZone)); // 1991-04-15T10:00+01:00[Europe/London]
+System.out.println(zonedDateTime.withZoneSameLocal(londonZone)); // 1991-04-15T13:00+01:00[Europe/London]
+
+System.out.println(offsetDateTime.withOffsetSameInstant(offset0)); // 1991-04-15T09:00Z
+System.out.println(offsetDateTime.withOffsetSameInstant(londonOffset)); // 1991-04-15T10:00+01:00
+System.out.println(offsetDateTime.withOffsetSameLocal(yerevanOffset)); // 1991-04-15T13:00+01:00</code></pre> 
+  <p>For this purpose, you can use two methods. The <code class="language-java">withZoneSameInstant()</code> returns the copy of the unit by calculating its instant and changing the time zone, and <code class="language-java">withZoneSameLocal()</code> returns the copy of the same date and time but with a changed time zone.</p> 
+  <h5 id="conclusion">Conclusion</h5> 
+  <p>The old <code class="language-java">java.util.Date</code> class didn't represent any time zones, just a number of milliseconds since the Java epoch. Using it, developers often faced difficulties when working with time zones. Since Java 8, the new <code class="language-java">java.time</code> additions have solved many issues that help developers handle operations involving time zones and daylight saving time. In this topic, we introduced you to the classes designed for that purpose, <code class="language-java">ZonedDateTime</code> and <code class="language-java">OffsetDateTime</code>. These classes are especially important for working on applications where you must implement operations taking into account possible time zone changes.</p>
+ </body>
+</html>

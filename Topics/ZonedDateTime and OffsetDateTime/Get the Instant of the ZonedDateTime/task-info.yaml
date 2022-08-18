@@ -1,0 +1,18 @@
+type: code
+files:
+- name: src/Main.java
+  visible: true
+  text: "import java.util.Scanner;\nimport java.time.*;\n\npublic class Main {\n \
+    \   public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n\
+    \        LocalDateTime  localDateTime = LocalDateTime.of(1991, 4, 15, 15, 0);\n\
+    \n        Instant instant = convertToInstant(localDateTime, scanner.nextInt());\n\
+    \        System.out.println(String.format(\"%s, toEpochSeconds: %d\", instant,\
+    \ instant.getEpochSecond()));\n    } \n\n    public static Instant convertToInstant(LocalDateTime\
+    \ localDateTime, int hours) {\n\n    }\n}"
+  learner_created: false
+feedback_link: https://hyperskill.org/learn/step/21650#comment
+status: Solved
+feedback:
+  message: <html>Correct solution</html>
+  time: Thu, 18 Aug 2022 11:10:18 UTC
+record: -1

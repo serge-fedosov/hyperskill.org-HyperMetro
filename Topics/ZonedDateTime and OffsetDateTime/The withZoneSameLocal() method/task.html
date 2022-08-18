@@ -1,0 +1,17 @@
+<h2>The withZoneSameLocal() method</h2>
+<html>
+ <head></head>
+ <body>
+  r/&gt; What is the output of the last line of this code?
+  <p></p> 
+  <pre><code class="language-java">ZoneId yerevanZone = ZoneId.of("Asia/Yerevan");
+ZoneId londonZone = ZoneId.of("Europe/London");
+
+LocalDateTime localDateTime = LocalDateTime.of(1991, 4, 15, 18, 00);
+ZonedDateTime londonZonedDateTime = ZonedDateTime.of(localDateTime, londonZone);
+
+System.out.println(londonZonedDateTime); // 1991-04-15T18:00+01:00[Europe/London]
+System.out.println(ZoneOffset.from(localDateTime.atZone(yerevanZone))); // +04:00
+System.out.println(londonZonedDateTime.withZoneSameLocal(yerevanZone));</code></pre>
+ </body>
+</html>

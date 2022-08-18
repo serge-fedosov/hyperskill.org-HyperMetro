@@ -1,0 +1,17 @@
+type: code
+files:
+- name: src/Main.java
+  visible: true
+  text: "import java.util.Scanner;\nimport java.time.*;\n\npublic class Main {\n \
+    \   public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n\
+    \        OffsetDateTime offsetDateTime = convertToOffsetDateTime(scanner.nextLong(),\
+    \ ZoneId.of(\"Asia/Yerevan\"));\n\n        System.out.println(offsetDateTime);\n\
+    \    } \n\n    public static OffsetDateTime convertToOffsetDateTime(long epochSeconds,\
+    \ ZoneId zoneId) {\n\n    }\n}"
+  learner_created: false
+feedback_link: https://hyperskill.org/learn/step/21651#comment
+status: Solved
+feedback:
+  message: <html>Correct solution</html>
+  time: Thu, 18 Aug 2022 10:54:55 UTC
+record: -1

@@ -1,0 +1,22 @@
+<h2>Comparing ZonedDateTime units</h2>
+<html>
+ <head></head>
+ <body>
+  r/&gt; What will the code below print?
+  <p></p> 
+  <pre><code class="language-java">LocalDate localDate1 = LocalDate.of(2011, 7, 11);
+LocalTime localTime1 = LocalTime.of(18,30);
+
+LocalDate localDate2 = LocalDate.of(1995, 5, 21);
+LocalTime localTime2 = LocalTime.of(18,30);
+
+LocalDateTime localDateTime1 = LocalDateTime.of(localDate1, localTime1);
+LocalDateTime localDateTime2 = LocalDateTime.of(localDate2, localTime2);
+
+ZoneOffset zoneOffset = ZoneOffset.of("+04:00");
+ZonedDateTime zonedDateTime1 = ZonedDateTime.of(localDateTime1, zoneOffset);
+ZonedDateTime zonedDateTime2 = ZonedDateTime.of(localDateTime2, zoneOffset);
+
+System.out.println(zonedDateTime2.compareTo(zonedDateTime1));</code></pre>
+ </body>
+</html>
